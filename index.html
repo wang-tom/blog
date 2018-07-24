@@ -39,84 +39,52 @@
     <br class="clear" />
   </div>
 </div>
-<div class="wrapper col3">
-  <div id="intro">
-    <div class="fl_left">
-      <h2>Cursus penati saccum ut curabitur nulla.</h2>
-      <p>Cursuspenatisaccum ut curabitur nulla tellus tor ames a in curabitur pede. Idet mollisi eros dis orci congue elis et curabitur consequam intesque. Curabiturpisametur in ante.</p>
-      <p class="readmore"><a href="#">Ipsumsenterdum non velit &raquo;</a></p>
-    </div>
-    <div class="fl_right"><img src="https://pic4.zhimg.com/v2-85abf4020970545d3ed9514008931c1f.jpg" alt="" /></div>
-    <br class="clear" />
-  </div>
-</div>
+<div style="padding-bottom: 10px; background: #fff;"></div>
 <div class="wrapper col4">
-  <div id="services">
-    <ul>
-      <li>
-        <div class="fl_left"><img src="images/2.jpg" alt="" /></div>
-        <div class="fl_right">
-          <h2>Indonectetus facilis</h2>
-          <p>Nullamlacus dui ipsum cons eque loborttis non euis que morbi penas dapibulum orna. Urnaultrices quis curabitur phasellentesque.</p>
-          <p class="readmore"><a href="#">Continue Reading &raquo;</a></p>
-        </div>
-      </li>
-      <li>
-        <div class="fl_left"><img src="images/3.jpg" alt="" /></div>
-        <div class="fl_right">
-          <h2>Indonectetus facilis</h2>
-          <p>Nullamlacus dui ipsum cons eque loborttis non euis que morbi penas dapibulum orna. Urnaultrices quis curabitur phasellentesque.</p>
-          <p class="readmore"><a href="#">Continue Reading &raquo;</a></p>
-        </div>
-      </li>
-      <li class="last">
-        <div class="fl_left"><img src="images/4.jpg" alt="" /></div>
-        <div class="fl_right">
-          <h2>Indonectetus facilis</h2>
-          <p>Nullamlacus dui ipsum cons eque loborttis non euis que morbi penas dapibulum orna. Urnaultrices quis curabitur phasellentesque.</p>
-          <p class="readmore"><a href="#">Continue Reading &raquo;</a></p>
-        </div>
-      </li>
-    </ul>
-    <br class="clear" />
-  </div>
+  <div id="services"><span id="hot"></span><span id="latest"></span></div>
 </div>
 <div class="wrapper col5">
-  <div id="container">
-    <div id="content">
-      <h2>About This Free CSS Template</h2>
-      <p>This is a W3C standards compliant free website template from <a href="http://www.cssmoban.com/" title="模板之家">模板之家</a>.</p>
-      <p>This template is distributed using a <a href="#">Website Template Licence</a>, which allows you to use and modify the template for both personal and commercial use when you keep the provided credit links in the footer.</p>
-      <p>For more CSS templates visit <a href="#">Free Website Templates</a>.</p>
-      <p>Lacusenim inte trices lorem anterdum nam sente vivamus quis fauctor mauris. Wisinon vivamus wisis adipis laorem lobortis curabiturpiscingilla dui platea ipsum lacingilla.</p>
-      <p>Semalique tor sempus vestibulum libero nibh pretium eget eu elit montes. Sedsemporttis sit intesque felit quis elis et cursuspenatibulum tincidunt non curabitae.</p>
-    </div>
-    <div id="column">
-      <div class="holder">
-        <h2>Nullamlacus loborttis</h2>
-        <ul id="latestnews">
-          <li> <img class="imgl" src="images/5.jpg" alt="" />
-            <p><strong><a href="#">Indonectetus facilis leo.</a></strong></p>
-            <p>Nullamlacus dui ipsum cons eque loborttis non euis que morbi penas dapibulum orna. Urnaultrices quis curabitur phasellentesque.</p>
-          </li>
-          <li class="last"> <img class="imgl" src="images/6.jpg" alt="" />
-            <p><strong><a href="#">Indonectetus facilis leo.</a></strong></p>
-            <p>Nullamlacus dui ipsum cons eque loborttis non euis que morbi penas dapibulum orna. Urnaultrices quis curabitur phasellentesque.</p>
-          </li>
-        </ul>
-      </div>
-    </div>
     <br class="clear" />
   </div>
 </div>
 <script type="text/javascript">
 $.ajax({
-  dataType: "jsonp",jsonp: "callback",
-  url: "http://sup.tlinx.cn/Index/getnews/",
+  async: false,
+  dataType: "jsonp",
+  jsonp: "callback",
+  url: "http://sup.tlinx.cn/Index/getnews",
   success: function(rs){
-    var json = JSON.parse(rs);
-    console.warn(json.date);
-  },error: function(){console.warn("检测商户号是否重复跨域失败");}
+	  var html = '<ul>';
+    	rs.stories.forEach(function(value,index,array){
+        	if((index+1)%4==0){
+        		var _class = 'class="last"';
+        	}else _class='';
+        	html += '<li '+_class+'><div class="fl_left"><img src="'+array[index].images+'" /></div>'+
+        			'<div class="fl_right"><h2><a target="_blank" href="http://daily.zhihu.com/story/'+array[index].id+'">'+array[index].id+'</a></h2><p>'+array[index].title+'</p></div>'+
+        			'</li>';
+        })
+      html += '</ul><br class="clear" />';
+      $("#latest").html(html);
+  },error: function(){console.warn("跨域访问失败");}
+});
+$.ajax({
+  async: false,
+  dataType: "jsonp",
+  jsonp: "callback",
+  url: "http://sup.tlinx.cn/Index/gethot",
+  success: function(rs){
+	  var html = '<ul>';
+    	rs.recent.forEach(function(value,index,array){
+        	if((index+1)%4==0){
+        		var _class = 'class="last"';
+        	}else _class='';
+        	html += '<li '+_class+'><div class="fl_left"><img src="'+array[index].thumbnail+'" /></div>'+
+        			'<div class="fl_right"><h2><a target="_blank" href="'+array[index].url+'">'+array[index].news_id+'</a></h2><p>'+array[index].title+'</p></div>'+
+        			'</li>';
+        })
+      html += '</ul><br class="clear" />';
+      $("#hot").html(html);
+  },error: function(){console.warn("跨域访问失败");}
 });
 </script>
 <div class="wrapper col6">
